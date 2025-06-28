@@ -25,5 +25,15 @@ jobs:
     - name: Install busted
       run: luarocks install busted
       
+    - name: Install StyLua
+      run: |
+        curl -L -o stylua.zip https://github.com/JohnnyMorganz/StyLua/releases/download/v2.1.0/stylua-linux-x86_64.zip
+        unzip stylua.zip
+        sudo mv stylua /usr/local/bin/
+        chmod +x /usr/local/bin/stylua
+      
+    - name: Run format check
+      run: make format-check
+      
     - name: Run tests
       run: make test

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if ! cd "$(git rev-parse --show-toplevel)"; then
+  echo "cd error"
+  exit 1
+fi
+
+branch=$(git rev-parse --abbrev-ref HEAD)
+# shellcheck disable=SC2063
+ancestor_branch=$(git show-branch | grep '*' | grep -v "${branch}" | head -1 | awk -F'[]~^[]' '{print $2}')
+
+if git rev-parse --verify origin/"${branch}" >/dev/null 2>&1; then
+  from=$(git merge-base HEAD origin/"${branch}")
+else
+  # 新しいブランチの場合
+  from=${ancestor_branch}
+fi
+
+# Luaファイルに変更がある場合のみStyLuaチェックを実行
+if git diff --name-only "${from}".."${branch}" | grep -Eq "\.lua$"; then
+  echo "🎨 Running StyLua format check"
+  if ! stylua --check .; then
+    echo "❌ StyLua format check failed. Please run 'stylua .' to format your code."
+    exit 1
+  fi
+  echo "✅ StyLua format check passed"
+fi
+
+exit 0

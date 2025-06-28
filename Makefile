@@ -1,4 +1,4 @@
-.PHONY: test test-unit install-deps
+.PHONY: test test-unit install-deps format format-check setup-hooks
 
 # テスト実行
 test: test-unit
@@ -21,3 +21,13 @@ coverage:
 # テストの詳細出力
 test-verbose:
 	busted --verbose
+
+# コードフォーマット実行
+format:
+	@echo "Running StyLua format..."
+	stylua .
+
+# フォーマットチェック
+format-check:
+	@echo "Running StyLua format check..."
+	stylua --check .
