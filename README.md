@@ -1,5 +1,7 @@
 # table-format.nvim
 
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+
 Markdown形式のテーブルをフォーマットするNeovimプラグインです。
 
 > [!WARNING]
@@ -115,6 +117,3 @@ make coverage
 - `tests/formatter_spec.lua`: フォーマット処理のテスト
 - `tests/e2e_spec.lua`: ISSUE-1の例を含むE2Eテスト
 
-## ライセンス
-
-MIT License
