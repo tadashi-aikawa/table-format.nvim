@@ -188,7 +188,7 @@ describe("formatter module", function()
             local table_data = {
                 rows = {
                     { "id", "name" },
-                    {},  -- empty row
+                    {}, -- empty row
                 },
                 separator_line = 2,
                 max_columns = 2,

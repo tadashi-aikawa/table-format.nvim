@@ -58,10 +58,10 @@ function M.format_table(table_data)
         -- ヘッダのみテーブルの場合：ヘッダ→セパレータ→空行を追加
         table.insert(formatted_lines, M.format_row(table_data.rows[1], widths))
         table.insert(formatted_lines, M.format_separator(widths))
-        
+
         -- 空のデータ行を作成（期待値通り "| " のみ）
         table.insert(formatted_lines, "| ")
-        
+
         return formatted_lines
     end
 
