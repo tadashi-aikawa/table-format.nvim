@@ -28,6 +28,11 @@ end
 function M.format_row(row, widths)
     local formatted_cells = {}
 
+    -- 空の行（パイプのみの行）またはnilの場合は空の行を返す
+    if not row or #row == 0 then
+        return "| "
+    end
+
     for col, cell in ipairs(row) do
         table.insert(formatted_cells, M.pad_cell(cell, widths[col]))
     end

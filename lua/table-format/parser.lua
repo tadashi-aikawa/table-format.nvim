@@ -52,10 +52,11 @@ end
 function M.is_separator_line(line)
     local trimmed = utils.trim(line)
 
-    -- 空のセパレータ行（|のみ）
-    if trimmed == "|" then
-        return true
-    end
+    -- 空のセパレータ行（|のみ）は除外
+    -- `| ` はデータ行として扱う
+    -- if trimmed == "|" then
+    --     return true
+    -- end
 
     -- 不完全なセパレータ行（|-、|--等）
     if trimmed:match("^|[-:]+$") then

@@ -65,6 +65,22 @@ describe("formatter module", function()
             local result = formatter.format_row(row, widths)
             assert.are.equal("| あいでぃ | 桃武     |", result)
         end)
+
+        it("should format empty row correctly (ISSUE-7)", function()
+            local row = {}
+            local widths = { 3, 8 }
+
+            local result = formatter.format_row(row, widths)
+            assert.are.equal("| ", result)
+        end)
+
+        it("should format nil row correctly (ISSUE-7)", function()
+            local row = nil
+            local widths = { 3, 8 }
+
+            local result = formatter.format_row(row, widths)
+            assert.are.equal("| ", result)
+        end)
     end)
 
     describe("format_separator", function()
@@ -163,6 +179,26 @@ describe("formatter module", function()
                 "| id | name |",
                 "| -- | ---- |",
                 "| 1  | test |",
+            }
+
+            assert.are.same(expected, result)
+        end)
+
+        it("should handle empty row correctly (ISSUE-7)", function()
+            local table_data = {
+                rows = {
+                    { "id", "name" },
+                    {},  -- empty row
+                },
+                separator_line = 2,
+                max_columns = 2,
+            }
+
+            local result = formatter.format_table(table_data)
+            local expected = {
+                "| id | name |",
+                "| -- | ---- |",
+                "| ",
             }
 
             assert.are.same(expected, result)

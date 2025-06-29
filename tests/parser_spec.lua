@@ -33,7 +33,7 @@ describe("parser module", function()
         end)
 
         it("should recognize incomplete separator lines", function()
-            assert.is_true(parser.is_separator_line("|")) -- 空セパレータ
+            -- assert.is_true(parser.is_separator_line("|")) -- 空セパレータ（ISSUE-7修正により除外）
             assert.is_true(parser.is_separator_line("|-")) -- 不完全セパレータ
             assert.is_true(parser.is_separator_line("|--"))
             assert.is_true(parser.is_separator_line("---")) -- パイプなし
@@ -43,6 +43,7 @@ describe("parser module", function()
             assert.is_false(parser.is_separator_line("| id | name |"))
             assert.is_false(parser.is_separator_line("|1|ichiro|"))
             assert.is_false(parser.is_separator_line("not a separator"))
+            assert.is_false(parser.is_separator_line("|")) -- ISSUE-7修正により、パイプのみの行はデータ行
         end)
     end)
 
@@ -179,12 +180,13 @@ describe("parser module", function()
 
             local table_data = parser.parse_table(lines, 1, 3)
 
-            assert.are.equal(2, table_data.separator_line)
+            assert.is_nil(table_data.separator_line) -- `|` はデータ行として扱われる
             assert.are.equal(2, table_data.max_columns)
-            assert.are.equal(2, #table_data.rows)
+            assert.are.equal(3, #table_data.rows) -- 3行のデータ行
 
             assert.are.same({ "プロパティ", "定義" }, table_data.rows[1])
-            assert.are.same({ "タイトル", "issueのタイトル" }, table_data.rows[2])
+            assert.are.same({ "", "" }, table_data.rows[2]) -- 空の行
+            assert.are.same({ "タイトル", "issueのタイトル" }, table_data.rows[3])
         end)
 
         it("should pad rows to max columns", function()

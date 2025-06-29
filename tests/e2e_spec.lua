@@ -71,6 +71,7 @@ describe("End-to-End table formatting", function()
             local expected = {
                 "| プロパティ | 定義            |",
                 "| ---------- | --------------- |",
+                "|            |                 |",
                 "| タイトル   | issueのタイトル |",
             }
 
@@ -182,6 +183,56 @@ describe("End-to-End table formatting", function()
                 "| 1  | test |",
             }
 
+            assert.are.same(expected, result)
+        end)
+    end)
+
+    describe("ISSUE-7: Pipe-only row error", function()
+        it("should not crash when parsing pipe-only row", function()
+            -- This test ensures the fix doesn't crash
+            local input = {
+                "| id | name |",
+                "| -- | ---- |",
+                "| ",
+            }
+
+            -- Should not crash - the exact output doesn't matter as much as not crashing
+            local result = format_table_lines(input)
+            assert.is_table(result)
+            assert.is_not_nil(result[1])
+        end)
+
+        it("should preserve pipe-only row as data (case 1)", function()
+            local input = {
+                "| id | name |",
+                "| -- | ---- |",
+                "| ",
+            }
+
+            local expected = {
+                "| id | name |",
+                "| -- | ---- |",
+                "|    |      |",
+            }
+
+            local result = format_table_lines(input)
+            assert.are.same(expected, result)
+        end)
+
+        it("should auto-insert separator with pipe-only row (case 2)", function()
+            local input = {
+                "| id | name | hoge",
+                "| -- | ---- |",
+                "| ",
+            }
+
+            local expected = {
+                "| id | name | hoge |",
+                "| -- | ---- | ---- |",
+                "|    |      |      |",
+            }
+
+            local result = format_table_lines(input)
             assert.are.same(expected, result)
         end)
     end)
