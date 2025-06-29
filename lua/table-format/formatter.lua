@@ -1,4 +1,5 @@
 local utils = require("table-format.utils")
+local parser = require("table-format.parser")
 local M = {}
 
 function M.calculate_column_widths(table_data)
@@ -47,6 +48,17 @@ end
 function M.format_table(table_data)
     local widths = M.calculate_column_widths(table_data)
     local formatted_lines = {}
+
+    if parser.is_header_only_table(table_data) then
+        -- ヘッダのみテーブルの場合：ヘッダ→セパレータ→空行を追加
+        table.insert(formatted_lines, M.format_row(table_data.rows[1], widths))
+        table.insert(formatted_lines, M.format_separator(widths))
+        
+        -- 空のデータ行を作成（期待値通り "| " のみ）
+        table.insert(formatted_lines, "| ")
+        
+        return formatted_lines
+    end
 
     local row_index = 1
     for i = 1, #table_data.rows + (table_data.separator_line and 1 or 0) do

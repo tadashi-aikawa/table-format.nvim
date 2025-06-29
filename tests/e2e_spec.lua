@@ -185,4 +185,51 @@ describe("End-to-End table formatting", function()
             assert.are.same(expected, result)
         end)
     end)
+
+    describe("ISSUE-6: Header-only table formatting", function()
+        it("should format case 1: basic header with space", function()
+            local input = {
+                "| id | name",
+            }
+
+            local expected = {
+                "| id | name |",
+                "| -- | ---- |",
+                "| ",
+            }
+
+            local result = format_table_lines(input)
+            assert.are.same(expected, result)
+        end)
+
+        it("should format case 2: basic header with pipes", function()
+            local input = {
+                "id|name",
+            }
+
+            local expected = {
+                "| id | name |",
+                "| -- | ---- |",
+                "| ",
+            }
+
+            local result = format_table_lines(input)
+            assert.are.same(expected, result)
+        end)
+
+        it("should format case 3: header with pipes and trailing space", function()
+            local input = {
+                "|id|name|",
+            }
+
+            local expected = {
+                "| id | name |",
+                "| -- | ---- |",
+                "| ",
+            }
+
+            local result = format_table_lines(input)
+            assert.are.same(expected, result)
+        end)
+    end)
 end)

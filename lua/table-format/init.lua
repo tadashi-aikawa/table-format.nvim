@@ -27,11 +27,17 @@ function M.format_table()
     end
 
     local table_data = parser.parse_table(table_lines, 1, #table_lines)
+    local is_header_only = parser.is_header_only_table(table_data)
     local formatted_lines = formatter.format_table(table_data)
 
     vim.api.nvim_buf_set_lines(current_buf, start_line - 1, end_line, false, formatted_lines)
 
-    vim.api.nvim_win_set_cursor(0, cursor_pos)
+    if is_header_only then
+        -- ヘッダのみテーブルの場合、カーソルを空のデータ行（3行目）の最初のセルに移動
+        vim.api.nvim_win_set_cursor(0, {start_line + 2, 2}) -- 3行目、2文字目（| の次）
+    else
+        vim.api.nvim_win_set_cursor(0, cursor_pos)
+    end
 end
 
 return M

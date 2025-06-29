@@ -87,6 +87,10 @@ function M.find_table_range(lines, cursor_line)
     return start_line, end_line
 end
 
+function M.is_header_only_table(table_data)
+    return #table_data.rows == 1 and table_data.separator_line == nil
+end
+
 function M.parse_table(lines, start_line, end_line)
     local table_data = {
         rows = {},
