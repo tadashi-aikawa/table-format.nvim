@@ -53,20 +53,40 @@ function M.is_separator_line(line)
     local trimmed = utils.trim(line)
 
     -- 空のセパレータ行（|のみ）は除外
-    -- `| ` はデータ行として扱う
-    -- if trimmed == "|" then
-    --     return true
-    -- end
+    if trimmed == "|" then
+        return false
+    end
+
+    -- パイプなしでハイフンのみの行（既存パターン）
+    if trimmed:match("^[-:]+$") then
+        return true
+    end
 
     -- 不完全なセパレータ行（|-、|--等）
     if trimmed:match("^|[-:]+$") then
         return true
     end
 
-    -- 既存のパターン
-    return trimmed:match("^|?%s*[-:]+%s*|.*$") ~= nil
-        or trimmed:match("^|.*|%s*[-:]+%s*|?$") ~= nil
-        or trimmed:match("^[-:]+$") ~= nil
+    -- テーブル行として解析してセルレベルで判定
+    if not M.is_table_line(line) then
+        return false
+    end
+
+    local cells = M.parse_table_line(line)
+    if #cells == 0 then
+        return false
+    end
+
+    -- 全てのセルがセパレーターセル（ハイフンとコロンのみで構成）かチェック
+    for _, cell in ipairs(cells) do
+        local cell_trimmed = utils.trim(cell)
+        -- 空セルまたはハイフン・コロンのみでないセルがあればデータ行
+        if cell_trimmed == "" or not cell_trimmed:match("^[-:]+$") then
+            return false
+        end
+    end
+
+    return true
 end
 
 function M.find_table_range(lines, cursor_line)

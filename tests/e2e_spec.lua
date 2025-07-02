@@ -283,4 +283,57 @@ describe("End-to-End table formatting", function()
             assert.are.same(expected, result)
         end)
     end)
+
+    describe("ISSUE-8: Single hyphen cells at start/end", function()
+        it("should format table with single hyphen cell correctly", function()
+            local input = {
+                "| id | name |",
+                "| -- | ---- |",
+                "| aa | - |",
+            }
+
+            local expected = {
+                "| id | name |",
+                "| -- | ---- |",
+                "| aa | -    |",
+            }
+
+            local result = format_table_lines(input)
+            assert.are.same(expected, result)
+        end)
+
+        it("should format table with single hyphen at start", function()
+            local input = {
+                "| id | name |",
+                "| -- | ---- |",
+                "| - | bb |",
+            }
+
+            local expected = {
+                "| id | name |",
+                "| -- | ---- |",
+                "| -  | bb   |",
+            }
+
+            local result = format_table_lines(input)
+            assert.are.same(expected, result)
+        end)
+
+        it("should format table with double hyphen cell correctly", function()
+            local input = {
+                "| id | name |",
+                "| -- | ---- |",
+                "| aa | -- |",
+            }
+
+            local expected = {
+                "| id | name |",
+                "| -- | ---- |",
+                "| aa | --   |",
+            }
+
+            local result = format_table_lines(input)
+            assert.are.same(expected, result)
+        end)
+    end)
 end)

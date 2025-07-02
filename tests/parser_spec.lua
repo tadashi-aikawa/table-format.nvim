@@ -45,6 +45,14 @@ describe("parser module", function()
             assert.is_false(parser.is_separator_line("not a separator"))
             assert.is_false(parser.is_separator_line("|")) -- ISSUE-7修正により、パイプのみの行はデータ行
         end)
+
+        it("should reject data lines with single hyphen cells (ISSUE-8)", function()
+            assert.is_false(parser.is_separator_line("| aa | - |"))
+            assert.is_false(parser.is_separator_line("| - | bb |"))
+            assert.is_false(parser.is_separator_line("| aa | -- |")) -- 2つのハイフンでも同様
+            assert.is_false(parser.is_separator_line("| + | bb |")) -- ハイフン以外の記号は問題なし
+            assert.is_false(parser.is_separator_line("| aa | - | cc |")) -- 中間カラムがハイフンでも問題なし（端のカラム以外）
+        end)
     end)
 
     describe("parse_table_line", function()
