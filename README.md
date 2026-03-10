@@ -24,7 +24,7 @@ Markdown形式のテーブルをフォーマットするNeovimプラグインで
 ```lua
 {
   "tadashi-aikawa/table-format.nvim",
-  cmd = "TableFormat"
+  cmd = "TableFormat",
   opts = {},
 }
 ```
